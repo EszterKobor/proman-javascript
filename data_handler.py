@@ -45,3 +45,11 @@ def create_new_board(cursor, title):
                     """,
                     {'title': title})
 
+
+@database_common.connection_handler
+def create_new_card(cursor, title, board_id, status_id):
+    cursor.execute("""
+                    INSERT INTO cards (board_id, title, status_id)
+                    VALUES ($(board_id)s, $(title)s, $(status_id)s);
+                    """,
+                    {'board_id': board_id, 'title': title, 'status_id': status_id})
