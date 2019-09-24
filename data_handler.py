@@ -29,5 +29,11 @@ def get_cards_for_board(cursor, board_id):
                     WHERE board_id = $(board_id)s;
                     """,
                    {'board_id': board_id})
-    cards_for_board = cursor.fetchall()
-    return cards_for_board
+    all_cards = cursor.fetchall()
+    matching_cards = []
+    for card in all_cards:
+        card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
+        matching_cards.append(card)
+    return matching_cards
+
+
