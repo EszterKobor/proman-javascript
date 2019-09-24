@@ -38,7 +38,7 @@ def get_cards_for_board(board_id: int):
 
 
 def main():
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5002)
 
     # Serving the favicon
     with app.app_context():
