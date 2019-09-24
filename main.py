@@ -30,11 +30,19 @@ def get_boards():
 @app.route("/get-cards/<int:board_id>")
 @json_response
 def get_cards_for_board(board_id: int):
-    """
-    All cards that belongs to a board
-    :param board_id: id of the parent board
-    """
     return data_handler.get_cards_for_board(board_id)
+
+
+@app.route("/create-new-board/<title>")
+@json_response
+def create_new_board(title):
+    return data_handler.create_new_board(title)
+
+
+@app.route("/create-new-card/") # to do: add parameters
+@json_response
+def create_new_card(title, board_id: int, status_id: int):
+    return data_handler.create_new_card(title, board_id, status_id)
 
 
 def main():
