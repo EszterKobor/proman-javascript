@@ -31,6 +31,7 @@ export let dom = {
 
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+        boardsContainer.firstChild.remove();
     },
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called

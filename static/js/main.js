@@ -1,4 +1,4 @@
-import { dom } from "./dom.js";
+import {dom} from "./dom.js";
 
 // This function is to initialize the application
 function init() {
@@ -9,4 +9,13 @@ function init() {
 
 }
 
+function tutorial() {
+    fetch(`/get-boards`, {
+        method: 'POST',
+        credentials: 'same-origin'
+
+    });
+}
+
 init();
+tutorial();
