@@ -37,3 +37,11 @@ def get_cards_for_board(cursor, board_id):
     return matching_cards
 
 
+@database_common.connection_handler
+def create_new_board(cursor, title):
+    cursor.execute("""
+                    INSERT INTO boards (title)
+                    VALUES ($(title)s);
+                    """,
+                    {'title': title})
+
