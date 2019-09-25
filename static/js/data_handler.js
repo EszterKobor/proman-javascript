@@ -19,6 +19,20 @@ export let dataHandler = {
     _api_post: function (url, data, callback) {
         // it is not called from outside
         // sends the data to the API, and calls callback function
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }).then(result => {
+            if (result.status === 200) {
+                callback(data);
+            } else {
+                alert("Process is unsuccessful!")
+            }
+        });
     },
     init: function () {
     },

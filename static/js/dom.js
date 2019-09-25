@@ -14,6 +14,8 @@ export let dom = {
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
+        dataHandler._api_post("/create-new-card/", {name: "Mira"}, console.log);
+
 
         let boardsContainer = document.querySelector('.board-container');
 
