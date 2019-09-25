@@ -21,7 +21,7 @@ export let dom = {
             const boardTemplate = document.querySelector('#board-template');
             const boardClone = document.importNode(boardTemplate.content, true);
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
-            boardClone.dataset.boardId = `${board.id}`;
+            boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
             boardsContainer.appendChild(boardClone);
         }
 
@@ -44,7 +44,7 @@ export let dom = {
             let currentColumn = currentBoard.querySelector(`[data-status-id='${card.status_id}']`).querySelector("board-column-content");
             const cardTemplate = document.querySelector('#card-template');
             const cardClone = document.importNode(cardTemplate.content, true);
-            cardClone.dataset.cardStatusId = "0";
+            cardClone.querySelector('.card').dataset.cardStatusId = `${card.status_id}`;
             cardClone.querySelector('.card-title').textContent = `${card.title}`;
             currentColumn.appendChild(cardClone);
         }
