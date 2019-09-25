@@ -21,8 +21,9 @@ export let dom = {
             const boardTemplate = document.querySelector('#board-template');
             const boardClone = document.importNode(boardTemplate.content, true);
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
-            boardClone.dataset.boardId = `${board.id}`;
+            boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
             boardsContainer.appendChild(boardClone);
+            this.loadCards(board.id);
         }
 
         document.querySelector('#board-loading').remove();
@@ -31,8 +32,8 @@ export let dom = {
     ,
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
-        dataHandler.getCardsByBoardId(function (boardsId) {
-            dom.showCards(cards);
+        dataHandler.getCardsByBoardId(boardId, function (cards) {
+            dom.showCards(cards)
         });
     }
     ,
@@ -41,10 +42,10 @@ export let dom = {
         // it adds necessary event listeners also
         const currentBoard = document.querySelector(`[data-board-id='${cards[0].board_id}']`);
         for (let card of cards) {
-            let currentColumn = currentBoard.querySelector(`[data-status-id='${card.status_id}']`).querySelector("board-column-content");
+            let currentColumn = currentBoard.querySelector(`[data-status-title='${card.status_id}']`).querySelector(".board-column-content");
             const cardTemplate = document.querySelector('#card-template');
             const cardClone = document.importNode(cardTemplate.content, true);
-            cardClone.dataset.cardStatusId = "0";
+            cardClone.querySelector('.card').dataset.cardStatusTitle = `${card.status_id}`;
             cardClone.querySelector('.card-title').textContent = `${card.title}`;
             currentColumn.appendChild(cardClone);
         }
