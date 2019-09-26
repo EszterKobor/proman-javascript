@@ -63,7 +63,13 @@ export let dom = {
                 saveBtn.addEventListener('click', function () {
                     let cardTitle = this.parentNode.querySelector('.input-data').value;
                     let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
-                    dataHandler.createNewCard(cardTitle, boardId, 0,);
+
+                    dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
+                        dom.showNewCard(data)
+                    });
+                    this.parentNode.remove();
+
+
                 });
 
                 let cancelBtn = this.parentNode.querySelector('.cancel-btn');
@@ -75,4 +81,15 @@ export let dom = {
             });
         }
     }
+    ,
+    showNewCard: function (data) {
+        const currentBoard = document.querySelector(`[data-board-id='${data.boardId}']`);
+        let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");
+        const cardTemplate = document.querySelector('#card-template');
+        const cardClone = document.importNode(cardTemplate.content, true);
+        cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
+        cardClone.querySelector('.card-title').textContent = data.cardTitle;
+        currentColumn.appendChild(cardClone);
+    }
 };
+
