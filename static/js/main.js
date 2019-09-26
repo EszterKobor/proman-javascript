@@ -9,13 +9,4 @@ function init() {
 
 }
 
-function tutorial() {
-    fetch(`/get-boards`, {
-        method: 'POST',
-        credentials: 'same-origin'
-
-    });
-}
-
 init();
-tutorial();

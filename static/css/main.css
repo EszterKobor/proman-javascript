@@ -55,7 +55,8 @@ section.board{
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .add-new-board, .board-toggle{
+
+.board-title, .board-add, .add-card, .board-toggle{
     display: inline-block;
 }
 
