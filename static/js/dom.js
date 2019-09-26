@@ -4,6 +4,7 @@ import {dataHandler} from "./data_handler.js";
 export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
+
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -14,9 +15,6 @@ export let dom = {
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
-        dataHandler._api_post("/create-new-card/", {name: "Mira"}, console.log);
-
-
         let boardsContainer = document.querySelector('.board-container');
 
         for (let board of boards) {
@@ -27,7 +25,7 @@ export let dom = {
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
         }
-
+        this.addCardData();
         document.querySelector('#board-loading').remove();
     }
 
@@ -53,5 +51,28 @@ export let dom = {
         }
     }
     ,
-    // here comes more features
+    addCardData: function () {
+        let addCardBtns = document.querySelectorAll('.add-card');
+        for (let button of addCardBtns) {
+            button.addEventListener('click', function () {
+                const inputTemplate = document.querySelector('#add-data-template');
+                const inputClone = document.importNode(inputTemplate.content, true);
+                this.parentNode.appendChild(inputClone);
+
+                let saveBtn = this.parentNode.querySelector('.save-btn');
+                saveBtn.addEventListener('click', function () {
+                    let cardTitle = this.parentNode.querySelector('.input-data').value;
+                    let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
+                    dataHandler.createNewCard(cardTitle, boardId, 0,);
+                });
+
+                let cancelBtn = this.parentNode.querySelector('.cancel-btn');
+                cancelBtn.addEventListener('click', function () {
+                    this.parentNode.remove();
+
+                })
+
+            });
+        }
+    }
 };
