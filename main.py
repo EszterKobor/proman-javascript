@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request
 from util import json_response
+import json
 
 import data_handler
 
@@ -40,11 +41,12 @@ def create_new_board(title):
     return data_handler.create_new_board(title)
 
 
-@app.route("/create-new-card/<cardTitle>/<boardId>/<statusId>", methods=["GET","POST"])  # to do: add parameters
+@app.route("/create-new-card/", methods=["GET","POST"])  # to do: add parameters
 @json_response
-def create_new_card(cardTitle, boardId, statusId):
+def create_new_card():
     if request.method == "POST":
-        return data_handler.create_new_card(cardTitle, boardId, statusId)
+        data = json.loads(request.data)
+        return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
 
 
 def main():
