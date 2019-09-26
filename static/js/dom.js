@@ -55,26 +55,35 @@ export let dom = {
         let addCardBtns = document.querySelectorAll('.add-card');
         for (let button of addCardBtns) {
             button.addEventListener('click', function () {
+                button.disabled = true;
                 const inputTemplate = document.querySelector('#add-data-template');
                 const inputClone = document.importNode(inputTemplate.content, true);
                 this.parentNode.appendChild(inputClone);
 
                 let saveBtn = this.parentNode.querySelector('.save-btn');
                 saveBtn.addEventListener('click', function () {
-                    let cardTitle = this.parentNode.querySelector('.input-data').value;
-                    let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
+                    if (this.parentNode.querySelector('.input-data').value === "") {
+                        this.parentNode.querySelector('.input-data').remove();
+                    } else {
+                        let cardTitle = this.parentNode.querySelector('.input-data').value;
+                        let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
 
-                    dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
-                        dom.showNewCard(data)
-                    });
+                        dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
+                            dom.showNewCard(data);
+
+                        });
+                    }
                     this.parentNode.remove();
+                    button.disabled = false;
                 });
 
                 let cancelBtn = this.parentNode.querySelector('.cancel-btn');
                 cancelBtn.addEventListener('click', function () {
                     this.parentNode.remove();
-                })
+                    button.disabled = false;
+                });
             });
+
         }
     },
 
