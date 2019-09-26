@@ -34,7 +34,7 @@ def get_cards_for_board(board_id: int):
     return data_handler.get_cards_for_board(board_id)
 
 
-@app.route("/create-new-board/<title>")
+@app.route("/create-new-board/<title>", methods=["POST"])
 @json_response
 def create_new_board(title):
     return data_handler.create_new_board(title)

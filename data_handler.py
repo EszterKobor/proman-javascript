@@ -41,10 +41,12 @@ def get_cards_for_board(cursor, board_id):
 def create_new_board(cursor, title):
     cursor.execute("""
                     INSERT INTO boards (title)
-                    VALUES (%(title)s);
+                    VALUES (%(title)s)
+                    RETURNING id, title;
                     """,
                     {'title': title})
-
+    result = cursor.fetchone()
+    return result
 
 @database_common.connection_handler
 def create_new_card(cursor, title, board_id, status_id):

@@ -34,6 +34,22 @@ export let dataHandler = {
             }
         });
     },
+    _api_post_board: function (url, callback) {
+        console.log("ez")
+        // it is not called from outside
+        // sends the data to the API, and calls callback function
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(result => {
+               callback(result);
+            });
+    },
     init: function () {
     },
     getBoards: function (callback) {
@@ -67,8 +83,9 @@ export let dataHandler = {
     },
     createNewBoard: function (boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
-
-    },
+        this._api_post_board(`/create-new-board/${boardTitle}`, callback);
+    }
+    ,
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
     }
