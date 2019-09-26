@@ -55,36 +55,7 @@ export let dom = {
     addCardData: function () {
         let addCardBtns = document.querySelectorAll('.add-card');
         for (let button of addCardBtns) {
-            button.addEventListener('click', function () {
-                button.disabled = true;
-                const inputTemplate = document.querySelector('#add-data-template');
-                const inputClone = document.importNode(inputTemplate.content, true);
-                this.parentNode.appendChild(inputClone);
-
-                let saveBtn = this.parentNode.querySelector('.save-btn');
-                saveBtn.addEventListener('click', function () {
-                    if (this.parentNode.querySelector('.input-data').value === "") {
-                        this.parentNode.querySelector('.input-data').remove();
-                    } else {
-                        let cardTitle = this.parentNode.querySelector('.input-data').value;
-                        let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
-
-                        dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
-                            dom.showNewCard(data);
-
-                        });
-                    }
-                    this.parentNode.remove();
-                    button.disabled = false;
-                });
-
-                let cancelBtn = this.parentNode.querySelector('.cancel-btn');
-                cancelBtn.addEventListener('click', function () {
-                    this.parentNode.remove();
-                    button.disabled = false;
-                });
-            });
-
+            button.addEventListener('click', dom.openNewCardForm);
         }
     },
 
@@ -98,7 +69,7 @@ export let dom = {
         currentColumn.appendChild(cardClone);
     }
     ,
-    openNewBoardForm: function (){
+    openNewBoardForm: function () {
         const boardForm = document.querySelector("#add-data-template");
         let boardFormClone = document.importNode(boardForm.content, true);
         const saveBtn = boardFormClone.querySelector(".save-btn");
@@ -108,18 +79,18 @@ export let dom = {
         saveBtn.addEventListener('click', dom.saveNewBoard);
         cancelBtn.addEventListener('click', dom.closeNewBoardForm);
         const boardSpan = boardFormClone.querySelector(".add-input");
-        boardSpan.setAttribute("id","board-input-form");
+        boardSpan.setAttribute("id", "board-input-form");
         let boardTitle = boardFormClone.querySelector(".input-data");
         boardTitle.setAttribute("id", "board-title");
 
         document.querySelector("#add-board-container").appendChild(boardFormClone);
     }
     ,
-    closeNewBoardForm: function (){
+    closeNewBoardForm: function () {
         document.querySelector("#board-input-form").remove();
     }
     ,
-    saveNewBoard: function (){
+    saveNewBoard: function () {
         let title = document.querySelector("#board-title").value;
         dataHandler.createNewBoard(title, dom.appendNewBoard);
         dom.closeNewBoardForm();
@@ -132,7 +103,38 @@ export let dom = {
         let titleArea = boardClone.querySelector(".board-title");
         titleArea.textContent = boardData.title;
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
+        boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardContainer.appendChild(boardClone);
+    }
+
+    ,
+    openNewCardForm: function (event) {
+        const inputTemplate = document.querySelector('#add-data-template');
+        const inputClone = document.importNode(inputTemplate.content, true);
+        this.parentNode.appendChild(inputClone);
+
+        let saveBtn = this.parentNode.querySelector('.save-btn');
+        saveBtn.addEventListener('click', function () {
+            if (this.parentNode.querySelector('.input-data').value === "") {
+                this.parentNode.querySelector('.input-data').remove();
+            } else {
+                let cardTitle = this.parentNode.querySelector('.input-data').value;
+                let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
+
+                dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
+                    dom.showNewCard(data);
+
+                });
+            }
+            this.parentNode.remove();
+            button.disabled = false;
+        });
+
+        let cancelBtn = this.parentNode.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click', function () {
+            this.parentNode.remove();
+            button.disabled = false;
+        });
     }
     // here comes more features
 };

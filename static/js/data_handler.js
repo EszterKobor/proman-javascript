@@ -37,7 +37,6 @@ export let dataHandler = {
     },
 
     _api_post_board: function (url, callback) {
-        console.log("ez")
         // it is not called from outside
         // sends the data to the API, and calls callback function
         fetch(url, {
