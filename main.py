@@ -40,12 +40,11 @@ def create_new_board(title):
     return data_handler.create_new_board(title)
 
 
-@app.route("/create-new-card/", methods=["POST"])  # to do: add parameters
+@app.route("/create-new-card/<cardTitle>/<boardId>/<statusId>", methods=["GET","POST"])  # to do: add parameters
 @json_response
-def create_new_card():
+def create_new_card(cardTitle, boardId, statusId):
     if request.method == "POST":
-        pass
-    # return data_handler.create_new_card(title, board_id, status_id)
+        return data_handler.create_new_card(cardTitle, boardId, statusId)
 
 
 def main():
