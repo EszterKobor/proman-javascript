@@ -4,14 +4,15 @@ import {dataHandler} from "./data_handler.js";
 export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
-
     },
+
     loadBoards: function () {
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function (boards) {
             dom.showBoards(boards);
         });
     },
+
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
@@ -27,16 +28,15 @@ export let dom = {
         }
         this.addCardData();
         document.querySelector('#board-loading').remove();
-    }
+    },
 
-    ,
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
         dataHandler.getCardsByBoardId(boardId, function (cards) {
             dom.showCards(cards)
         });
-    }
-    ,
+    },
+
     showCards: function (cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
@@ -49,8 +49,8 @@ export let dom = {
             cardClone.querySelector('.card-title').textContent = `${card.title}`;
             currentColumn.appendChild(cardClone);
         }
-    }
-    ,
+    },
+
     addCardData: function () {
         let addCardBtns = document.querySelectorAll('.add-card');
         for (let button of addCardBtns) {
@@ -68,20 +68,16 @@ export let dom = {
                         dom.showNewCard(data)
                     });
                     this.parentNode.remove();
-
-
                 });
 
                 let cancelBtn = this.parentNode.querySelector('.cancel-btn');
                 cancelBtn.addEventListener('click', function () {
                     this.parentNode.remove();
-
                 })
-
             });
         }
-    }
-    ,
+    },
+
     showNewCard: function (data) {
         const currentBoard = document.querySelector(`[data-board-id='${data.boardId}']`);
         let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");

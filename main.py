@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from util import json_response
-import json
 
+import json
 import data_handler
 
 app = Flask(__name__)
@@ -18,17 +18,9 @@ def index():
 @app.route("/get-boards", methods=['GET', 'POST'])
 @json_response
 def get_boards():
-    if request.method == 'POST':
-        print('MEGJÖTTEM JSBŐL POSTKÉNT')
-        return
-    print('GET VOK')
-    """
-    All the boards
-    """
     return data_handler.get_boards()
 
 
-# !!!! "/cards/<int:board_id>"
 @app.route("/get-cards/<int:board_id>")
 @json_response
 def get_cards_for_board(board_id: int):
@@ -41,7 +33,7 @@ def create_new_board(title):
     return data_handler.create_new_board(title)
 
 
-@app.route("/create-new-card/", methods=["GET","POST"])  # to do: add parameters
+@app.route("/create-new-card/", methods=["GET", "POST"])
 @json_response
 def create_new_card():
     if request.method == "POST":
