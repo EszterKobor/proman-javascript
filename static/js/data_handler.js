@@ -27,30 +27,18 @@ export let dataHandler = {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data) // body data type must match "Content-Type" header
-        }).then(result => {
-            if (result.status === 200) {
-                callback(data);
-            } else {
+        }).then(response => {
+            if (response.status === 200) {
+            response.json()
+            .then(result => {
+                callback(result);
+            })} else {
                 alert("Process is unsuccessful!")
             }
-        });
+        })
     },
 
-    _api_post_board: function (url, callback) {
-        // it is not called from outside
-        // sends the data to the API, and calls callback function
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(response => response.json())
-            .then(result => {
-               callback(result);
-            });
-    },
+
     init: function () {
     },
 
@@ -91,7 +79,7 @@ export let dataHandler = {
 
     createNewBoard: function (boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
-        this._api_post_board(`/create-new-board/${boardTitle}`, callback);
+        this._api_post('/create-new-board/', {"boardTitle": boardTitle}, callback);
     }
     ,
     createNewCard: function (cardTitle, boardId, statusId, callback) {

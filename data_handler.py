@@ -44,14 +44,18 @@ def create_new_board(cursor, title):
                     VALUES (%(title)s)
                     RETURNING id, title;
                     """,
-                    {'title': title})
+                   {'title': title})
     result = cursor.fetchone()
     return result
+
 
 @database_common.connection_handler
 def create_new_card(cursor, title, board_id, status_id):
     cursor.execute("""
                     INSERT INTO cards (board_id, title, status_id)
-                    VALUES (%(board_id)s, %(title)s, %(status_id)s);
+                    VALUES (%(board_id)s, %(title)s, %(status_id)s)
+                    RETURNING id, board_id, title, status_id;
                     """,
-                    {'board_id': board_id, 'title': title, 'status_id': status_id})
+                   {'board_id': board_id, 'title': title, 'status_id': status_id})
+    result = cursor.fetchone()
+    return result

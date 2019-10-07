@@ -60,12 +60,12 @@ export let dom = {
     },
 
     showNewCard: function (data) {
-        const currentBoard = document.querySelector(`[data-board-id='${data.boardId}']`);
+        const currentBoard = document.querySelector(`[data-board-id='${data.board_id}']`);
         let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
         cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
-        cardClone.querySelector('.card-title').textContent = data.cardTitle;
+        cardClone.querySelector('.card-title').textContent = data.title;
         currentColumn.appendChild(cardClone);
     }
     ,

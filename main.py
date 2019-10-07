@@ -27,18 +27,18 @@ def get_cards_for_board(board_id: int):
     return data_handler.get_cards_for_board(board_id)
 
 
-@app.route("/create-new-board/<title>", methods=["POST"])
+@app.route("/create-new-board/", methods=["POST"])
 @json_response
-def create_new_board(title):
-    return data_handler.create_new_board(title)
+def create_new_board():
+    data = json.loads(request.data)
+    return data_handler.create_new_board(data["boardTitle"])
 
 
-@app.route("/create-new-card/", methods=["GET", "POST"])
+@app.route("/create-new-card/", methods=["POST"])
 @json_response
 def create_new_card():
-    if request.method == "POST":
-        data = json.loads(request.data)
-        return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
+    data = json.loads(request.data)
+    return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
 
 
 def main():
