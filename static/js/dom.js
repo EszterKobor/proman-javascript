@@ -108,29 +108,29 @@ export let dom = {
     }
 
     ,
-    openNewCardForm: function (event) {
+    openNewCardForm: function () {
+        this.disabled = true;
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
         this.parentNode.appendChild(inputClone);
 
         let saveBtn = this.parentNode.querySelector('.save-btn');
         saveBtn.addEventListener('click', function () {
-            if (this.parentNode.querySelector('.input-data').value === "") {
-                this.parentNode.querySelector('.input-data').remove();
-            } else {
+            if (this.parentNode.querySelector('.input-data').value !== "") {
                 let cardTitle = this.parentNode.querySelector('.input-data').value;
                 let boardId = this.closest('section.board').dataset.boardId;
-
                 dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
                     dom.showNewCard(data);
-
                 });
             }
+            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
+            this.parentNode.querySelector('.input-data').remove();
             this.parentNode.remove();
         });
 
         let cancelBtn = this.parentNode.querySelector('.cancel-btn');
         cancelBtn.addEventListener('click', function () {
+            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
             this.parentNode.remove();
         });
     }
