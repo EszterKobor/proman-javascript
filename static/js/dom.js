@@ -34,7 +34,9 @@ export let dom = {
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
         dataHandler.getCardsByBoardId(boardId, function (cards) {
-            dom.showCards(cards)
+            if(cards.length != 0) {
+                dom.showCards(cards)
+            }
         });
     },
 
@@ -73,27 +75,20 @@ export let dom = {
         const boardForm = document.querySelector("#add-data-template");
         let boardFormClone = document.importNode(boardForm.content, true);
         const saveBtn = boardFormClone.querySelector(".save-btn");
-        saveBtn.setAttribute("id", "save-board-btn");
         const cancelBtn = boardFormClone.querySelector(".cancel-btn");
-        cancelBtn.setAttribute("id", "cancel-board-form-btn");
         saveBtn.addEventListener('click', dom.saveNewBoard);
         cancelBtn.addEventListener('click', dom.closeNewBoardForm);
-        const boardSpan = boardFormClone.querySelector(".add-input");
-        boardSpan.setAttribute("id", "board-input-form");
-        let boardTitle = boardFormClone.querySelector(".input-data");
-        boardTitle.setAttribute("id", "board-title");
-
         document.querySelector("#add-board-container").appendChild(boardFormClone);
     }
     ,
     closeNewBoardForm: function () {
-        document.querySelector("#board-input-form").remove();
+        this.closest('.add-input').remove();
     }
     ,
     saveNewBoard: function () {
-        let title = document.querySelector("#board-title").value;
+        let title = this.previousElementSibling.value;
         dataHandler.createNewBoard(title, dom.appendNewBoard);
-        dom.closeNewBoardForm();
+        this.closest('.add-input').remove();
     }
     ,
     appendNewBoard: function (boardData) {
@@ -127,13 +122,11 @@ export let dom = {
                 });
             }
             this.parentNode.remove();
-            button.disabled = false;
         });
 
         let cancelBtn = this.parentNode.querySelector('.cancel-btn');
         cancelBtn.addEventListener('click', function () {
             this.parentNode.remove();
-            button.disabled = false;
         });
     }
     // here comes more features
