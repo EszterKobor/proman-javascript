@@ -119,7 +119,7 @@ export let dom = {
                 this.parentNode.querySelector('.input-data').remove();
             } else {
                 let cardTitle = this.parentNode.querySelector('.input-data').value;
-                let boardId = this.parentNode.parentNode.parentNode.dataset.boardId;
+                let boardId = this.closest('section.board').dataset.boardId;
 
                 dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
                     dom.showNewCard(data);
