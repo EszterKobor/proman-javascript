@@ -34,7 +34,7 @@ export let dom = {
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
         dataHandler.getCardsByBoardId(boardId, function (cards) {
-            if(cards.length != 0) {
+            if (cards.length != 0) {
                 dom.showCards(cards)
             }
         });
@@ -72,6 +72,7 @@ export let dom = {
     }
     ,
     openNewBoardForm: function () {
+        document.querySelector('.board-add').disabled = true;
         const boardForm = document.querySelector("#add-data-template");
         let boardFormClone = document.importNode(boardForm.content, true);
         const saveBtn = boardFormClone.querySelector(".save-btn");
@@ -83,12 +84,16 @@ export let dom = {
     ,
     closeNewBoardForm: function () {
         this.closest('.add-input').remove();
+        document.querySelector('.board-add').disabled = false;
     }
     ,
     saveNewBoard: function () {
         let title = this.previousElementSibling.value;
-        dataHandler.createNewBoard(title, dom.appendNewBoard);
+        if (title !== "") {
+            dataHandler.createNewBoard(title, dom.appendNewBoard);
+        }
         this.closest('.add-input').remove();
+        document.querySelector('.board-add').disabled = false;
     }
     ,
     appendNewBoard: function (boardData) {
