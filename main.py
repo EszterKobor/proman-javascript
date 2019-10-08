@@ -48,6 +48,13 @@ def delete_card():
     return data_handler.delete_card(data['cardId'])
 
 
+@app.route("/rename-board/", methods=["POST"])
+@json_response
+def rename_board():
+    data = json.loads(request.data)
+    return data_handler.rename_board(data['id'], data["newBoardTitle"])
+
+
 def main():
     app.run(debug=True, port=5002)
 

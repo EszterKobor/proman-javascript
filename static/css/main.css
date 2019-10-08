@@ -128,3 +128,7 @@ section.board{
 .card-title{
     padding-right: 16px;
 }
+
+.hidden-board {
+    display: none;
+}

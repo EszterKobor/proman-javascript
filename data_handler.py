@@ -70,3 +70,16 @@ def delete_card(cursor, card_id):
     """, {'card_id': card_id})
     result = cursor.fetchone()
     return result
+
+
+@database_common.connection_handler
+def rename_board(cursor, id, title):
+    cursor.execute("""
+                    UPDATE boards
+                    SET title = %(title)s
+                    WHERE boards.id = %(id)s
+                    RETURNING id, title;
+                    """,
+                   {'id': id, 'title': title})
+    result = cursor.fetchone()
+    return result
