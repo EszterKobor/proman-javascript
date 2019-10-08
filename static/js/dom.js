@@ -139,8 +139,12 @@ export let dom = {
 
     ,
     toggleBoardContent: function () {
-
-
+        let boardContent = this.closest('.board-header').nextElementSibling;
+        if (boardContent.style.display === "none") {
+            boardContent.style.display = "flex";
+        } else {
+            boardContent.style.display = "none";
+        }
 
     }
     // here comes more features
