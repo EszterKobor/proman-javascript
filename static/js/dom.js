@@ -1,4 +1,5 @@
 // It uses data_handler.js to visualize elements
+
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
@@ -25,6 +26,10 @@ export let dom = {
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
             boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
             boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
+            dragula(boardClone.querySelectorAll('.board-column-content'));
+            let boardContent = boardClone.querySelectorAll('.board-column-content');
+            let boardContentArray = Array.from(boardContent);
+            dragula(boardContentArray);
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
         }
@@ -106,6 +111,9 @@ export let dom = {
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
+        let boardContent = boardClone.querySelectorAll('.board-column-content');
+        let boardContentArray = Array.from(boardContent);
+        dragula(boardContentArray);
         boardContainer.appendChild(boardClone);
     }
 
