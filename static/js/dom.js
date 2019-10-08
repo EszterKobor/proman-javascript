@@ -105,8 +105,8 @@ export let dom = {
         titleArea.textContent = boardData.title;
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
-        boardContainer.appendChild(boardClone);
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
+        boardContainer.appendChild(boardClone);
     }
 
     ,
