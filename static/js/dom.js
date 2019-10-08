@@ -140,10 +140,12 @@ export let dom = {
     ,
     toggleBoardContent: function () {
         let boardContent = this.closest('.board-header').nextElementSibling;
-        if (boardContent.style.display === "none") {
-            boardContent.style.display = "flex";
+        if (boardContent.classList.contains('hidden-board')) {
+            boardContent.classList.remove('hidden-board');
+            boardContent.classList.add('board-columns');
         } else {
-            boardContent.style.display = "none";
+            boardContent.classList.remove('board-columns');
+            boardContent.classList.add('hidden-board');
         }
 
     }
