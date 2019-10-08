@@ -24,6 +24,7 @@ export let dom = {
             const boardClone = document.importNode(boardTemplate.content, true);
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
             boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
+            boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
         }
@@ -105,6 +106,7 @@ export let dom = {
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardContainer.appendChild(boardClone);
+        boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
     }
 
     ,
@@ -133,6 +135,13 @@ export let dom = {
             this.parentNode.parentNode.querySelector('.add-card').disabled = false;
             this.parentNode.remove();
         });
+    }
+
+    ,
+    toggleBoardContent: function () {
+
+
+
     }
     // here comes more features
 };
