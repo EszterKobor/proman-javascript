@@ -49,7 +49,9 @@ export let dom = {
             const cardTemplate = document.querySelector('#card-template');
             const cardClone = document.importNode(cardTemplate.content, true);
             cardClone.querySelector('.card').dataset.cardStatusTitle = `${card.status_id}`;
+            cardClone.querySelector('.card').dataset.cardId = `${card.id}`;
             cardClone.querySelector('.card-title').textContent = `${card.title}`;
+            dom.createCardDeletion(cardClone);
             currentColumn.appendChild(cardClone);
         }
     },
@@ -67,7 +69,9 @@ export let dom = {
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
         cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
+        cardClone.querySelector('.card').dataset.cardId = `${data.id}`;
         cardClone.querySelector('.card-title').textContent = data.title;
+        dom.createCardDeletion(cardClone);
         currentColumn.appendChild(cardClone);
     }
     ,
@@ -106,7 +110,6 @@ export let dom = {
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardContainer.appendChild(boardClone);
     }
-
     ,
     openNewCardForm: function () {
         this.disabled = true;
@@ -134,6 +137,27 @@ export let dom = {
             this.parentNode.remove();
         });
     }
+    ,
+    createCardDeletion: function (card) {
+        card.querySelector('.fas').addEventListener('click', dom.startCardDeletion);
+    },
+
+    startCardDeletion: function () {
+        const cardId = this.closest(".card").dataset.cardId;
+        dataHandler.deleteCard(cardId, function (data) {
+            dom.deleteCard(data)
+        })
+    },
+
+    deleteCard: function (data) {
+        const card = document.querySelector(`[data-card-id='${data.id}']`);
+        let cardContainer = card.parentElement;
+        card.remove();
+        if (cardContainer.childElementCount === 0) {
+            cardContainer.textContent = '';
+        }
+    }
+
     // here comes more features
 };
 

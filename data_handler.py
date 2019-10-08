@@ -59,3 +59,14 @@ def create_new_card(cursor, title, board_id, status_id):
                    {'board_id': board_id, 'title': title, 'status_id': status_id})
     result = cursor.fetchone()
     return result
+
+
+@database_common.connection_handler
+def delete_card(cursor, card_id):
+    cursor.execute("""
+    DELETE FROM cards
+    WHERE id = %(card_id)s
+    RETURNING id;
+    """, {'card_id': card_id})
+    result = cursor.fetchone()
+    return result

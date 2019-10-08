@@ -41,6 +41,13 @@ def create_new_card():
     return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
 
 
+@app.route("/delete_card/", methods=["POST"])
+@json_response
+def delete_card():
+    data = json.loads(request.data)
+    return data_handler.delete_card(data['cardId'])
+
+
 def main():
     app.run(debug=True, port=5002)
 

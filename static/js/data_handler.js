@@ -80,12 +80,16 @@ export let dataHandler = {
     createNewBoard: function (boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/create-new-board/', {"boardTitle": boardTitle}, callback);
-    }
-    ,
+    },
+
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
         this._api_post(`/create-new-card/`,
             {"cardTitle": cardTitle, "boardId": boardId, "statusId": statusId}, callback)
+    },
+
+    deleteCard: function (cardId, callback) {
+      this._api_post(`/delete_card/`, {"cardId": cardId}, callback)
     }
     // here comes more features
 };
