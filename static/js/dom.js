@@ -143,9 +143,13 @@ export let dom = {
         if (boardContent.classList.contains('hidden-board')) {
             boardContent.classList.remove('hidden-board');
             boardContent.classList.add('board-columns');
+            this.querySelector('i').classList.remove('fa-chevron-down');
+            this.querySelector('i').classList.add('fa-chevron-up');
         } else {
             boardContent.classList.remove('board-columns');
             boardContent.classList.add('hidden-board');
+            this.querySelector('i').classList.remove('fa-chevron-up');
+            this.querySelector('i').classList.add('fa-chevron-down');
         }
 
     }
