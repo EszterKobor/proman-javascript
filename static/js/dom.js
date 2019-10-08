@@ -24,6 +24,7 @@ export let dom = {
             const boardClone = document.importNode(boardTemplate.content, true);
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
             boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
+            boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
         }
@@ -111,6 +112,7 @@ export let dom = {
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
         boardClone.querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
+        boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
         boardContainer.appendChild(boardClone);
     }
     ,
@@ -139,6 +141,22 @@ export let dom = {
             this.parentNode.parentNode.querySelector('.add-card').disabled = false;
             this.parentNode.remove();
         });
+    }
+    ,
+    toggleBoardContent: function () {
+        let boardContent = this.closest('.board-header').nextElementSibling;
+        if (boardContent.classList.contains('hidden-board')) {
+            boardContent.classList.remove('hidden-board');
+            boardContent.classList.add('board-columns');
+            this.querySelector('i').classList.remove('fa-chevron-down');
+            this.querySelector('i').classList.add('fa-chevron-up');
+        } else {
+            boardContent.classList.remove('board-columns');
+            boardContent.classList.add('hidden-board');
+            this.querySelector('i').classList.remove('fa-chevron-up');
+            this.querySelector('i').classList.add('fa-chevron-down');
+        }
+
     }
     ,
     openRenameBoardForm: function () {
