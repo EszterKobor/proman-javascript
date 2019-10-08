@@ -29,8 +29,14 @@ export let dom = {
         }
         this.addCardData();
         document.querySelector('#board-loading').remove();
-    },
 
+        let boardTitles = document.querySelectorAll('.board-title');
+        console.log(boardTitles);
+        for (let title of boardTitles) {
+            title.addEventListener('click', dom.openRenameBoardForm);
+        }
+    }
+    ,
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
         dataHandler.getCardsByBoardId(boardId, function (cards) {
@@ -38,8 +44,8 @@ export let dom = {
                 dom.showCards(cards)
             }
         });
-    },
-
+    }
+    ,
     showCards: function (cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
@@ -52,15 +58,15 @@ export let dom = {
             cardClone.querySelector('.card-title').textContent = `${card.title}`;
             currentColumn.appendChild(cardClone);
         }
-    },
-
+    }
+    ,
     addCardData: function () {
         let addCardBtns = document.querySelectorAll('.add-card');
         for (let button of addCardBtns) {
             button.addEventListener('click', dom.openNewCardForm);
         }
-    },
-
+    }
+    ,
     showNewCard: function (data) {
         const currentBoard = document.querySelector(`[data-board-id='${data.board_id}']`);
         let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");
@@ -103,10 +109,10 @@ export let dom = {
         let titleArea = boardClone.querySelector(".board-title");
         titleArea.textContent = boardData.title;
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
+        boardClone.querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardContainer.appendChild(boardClone);
     }
-
     ,
     openNewCardForm: function () {
         this.disabled = true;
@@ -134,6 +140,58 @@ export let dom = {
             this.parentNode.remove();
         });
     }
-    // here comes more features
+    ,
+    openRenameBoardForm: function () {
+        const renameForm = document.querySelector("#add-data-template");
+        let renameFormClone = document.importNode(renameForm.content, true);
+        let firstChild = this.closest('.board-header');
+        let oldTitle = firstChild.childNodes[0];
+        console.log(oldTitle);
+
+        const saveBtn = renameFormClone.querySelector(".save-btn");
+        saveBtn.addEventListener('click', function () {
+            dom.saveNewTitle(oldTitle, this)
+        });
+
+        const cancelBtn = renameFormClone.querySelector(".cancel-btn");
+        cancelBtn.addEventListener('click', function () {
+            dom.closeNewTitleForm(oldTitle, this)
+        });
+
+        firstChild.replaceChild(renameFormClone, oldTitle);
+    }
+    ,
+    saveNewTitle: function (oldTitle, saveButton) {
+        let title = saveButton.previousElementSibling.value;
+        let boardId = saveButton.closest('.board').dataset.boardId;
+        if (title !== "") {
+        } else {
+            title = oldTitle.innerHTML;
+        }
+        dataHandler.renameBoard(boardId, title, dom.showNewTitle);
+    }
+    ,
+    showNewTitle: function (newTitle) {
+        let currentBoard = document.querySelector(`[data-board-id='${newTitle.id}']`);
+        let boardHeader = currentBoard.querySelector('.board-header');
+        let titleSpan = document.createElement('span');
+        titleSpan.setAttribute('class', 'board-title');
+        titleSpan.innerHTML = newTitle.title;
+
+        currentBoard.querySelector('.add-input').remove();
+        boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
+
+        titleSpan.addEventListener('click', dom.openRenameBoardForm);
+    }
+    ,
+    closeNewTitleForm: function (oldTitle, cancelButton) {
+        let boardHeader = cancelButton.closest('.board-header');
+        cancelButton.closest('.add-input').remove();
+        let titleSpan = document.createElement('span');
+        titleSpan.setAttribute('class', 'board-title');
+        titleSpan.innerHTML = oldTitle.innerHTML;
+        boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
+        titleSpan.addEventListener('click', dom.openRenameBoardForm);
+    }
 };
 

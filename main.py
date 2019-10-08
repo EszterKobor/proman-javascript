@@ -41,6 +41,13 @@ def create_new_card():
     return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
 
 
+@app.route("/rename-board/", methods=["POST"])
+@json_response
+def rename_board():
+    data = json.loads(request.data)
+    return data_handler.rename_board(data['id'], data["newBoardTitle"])
+
+
 def main():
     app.run(debug=True, port=5002)
 

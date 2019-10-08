@@ -88,4 +88,8 @@ export let dataHandler = {
             {"cardTitle": cardTitle, "boardId": boardId, "statusId": statusId}, callback)
     }
     // here comes more features
+    ,
+    renameBoard: function (boardId, newTitle, callback) {
+        this._api_post('/rename-board/', {'id': boardId, 'newBoardTitle': newTitle}, callback);
+    }
 };
