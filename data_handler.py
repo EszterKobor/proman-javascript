@@ -16,7 +16,8 @@ def get_card_status(cursor, status_id):
 @database_common.connection_handler
 def get_boards(cursor):
     cursor.execute("""
-                    SELECT * FROM boards;
+                    SELECT * FROM boards
+                    ORDER BY id;
                     """)
     boards = cursor.fetchall()
     return boards
@@ -74,4 +75,28 @@ def drag_and_drop_card(cursor, card_id, new_status_id):
                    {'card_id': card_id, 'new_status_id': new_status_id})
     result = cursor.fetchone()
     print(result)
+    return result
+
+
+@database_common.connection_handler
+def delete_card(cursor, card_id):
+    cursor.execute("""
+    DELETE FROM cards
+    WHERE id = %(card_id)s
+    RETURNING id;
+    """, {'card_id': card_id})
+    result = cursor.fetchone()
+    return result
+
+
+@database_common.connection_handler
+def rename_board(cursor, id, title):
+    cursor.execute("""
+                    UPDATE boards
+                    SET title = %(title)s
+                    WHERE boards.id = %(id)s
+                    RETURNING id, title;
+                    """,
+                   {'id': id, 'title': title})
+    result = cursor.fetchone()
     return result

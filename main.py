@@ -47,6 +47,20 @@ def drag_and_drop():
     return data_handler.drag_and_drop_card(data_to_modify['cardId'], data_to_modify['newStatusId'])
 
 
+@app.route("/delete_card/", methods=["POST"])
+@json_response
+def delete_card():
+    data = json.loads(request.data)
+    return data_handler.delete_card(data['cardId'])
+
+
+@app.route("/rename-board/", methods=["POST"])
+@json_response
+def rename_board():
+    data = json.loads(request.data)
+    return data_handler.rename_board(data['id'], data["newBoardTitle"])
+
+
 def main():
     app.run(debug=True, port=5002)
 

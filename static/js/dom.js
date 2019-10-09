@@ -1,5 +1,4 @@
 // It uses data_handler.js to visualize elements
-
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
@@ -36,8 +35,13 @@ export let dom = {
         }
         this.addCardData();
         document.querySelector('#board-loading').remove();
-    },
 
+        let boardTitles = document.querySelectorAll('.board-title');
+        for (let title of boardTitles) {
+            title.addEventListener('click', dom.openRenameBoardForm);
+        }
+    }
+    ,
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
         dataHandler.getCardsByBoardId(boardId, function (cards) {
@@ -45,20 +49,13 @@ export let dom = {
                 dom.showCards(cards)
             }
         });
-    },
-
+    }
+    ,
     showCards: function (cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
-        const currentBoard = document.querySelector(`[data-board-id='${cards[0].board_id}']`);
         for (let card of cards) {
-            let currentColumn = currentBoard.querySelector(`[data-status-title='${card.status_id}']`).querySelector(".board-column-content");
-            const cardTemplate = document.querySelector('#card-template');
-            const cardClone = document.importNode(cardTemplate.content, true);
-            cardClone.querySelector('.card').dataset.cardStatusTitle = `${card.status_id}`;
-            cardClone.querySelector('.card-title').textContent = `${card.title}`
-            cardClone.querySelector('.card').dataset.cardId = `${card.id}`;
-            currentColumn.appendChild(cardClone);
+            dom.showCard(card, card.status_id)
         }
     },
 
@@ -69,15 +66,20 @@ export let dom = {
         }
     },
 
-    showNewCard: function (data) {
-        const currentBoard = document.querySelector(`[data-board-id='${data.board_id}']`);
-        let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");
+    showNewCard: function (cardData) {
+        dom.showCard(cardData);
+    },
+
+    showCard: function (cardData, statusTitle = 'new') {
+        const currentBoard = document.querySelector(`[data-board-id='${cardData.board_id}']`);
+        let currentColumn = currentBoard.querySelector(`[data-status-title="${statusTitle}"]`)
+            .querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
         cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
-        cardClone.querySelector('.card').dataset.cardId = data.id;
-        cardClone.querySelector('.card').dataset.boardId = data.board_id;
-        cardClone.querySelector('.card-title').textContent = data.title;
+        cardClone.querySelector('.card').dataset.cardId = `${cardData.id}`;
+        cardClone.querySelector('.card-title').textContent = cardData.title;
+        dom.createCardDeletion(cardClone);
         currentColumn.appendChild(cardClone);
     }
     ,
@@ -113,6 +115,7 @@ export let dom = {
         let titleArea = boardClone.querySelector(".board-title");
         titleArea.textContent = boardData.title;
         boardClone.querySelector('.board').dataset.boardId = `${boardData.id}`;
+        boardClone.querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
         let boardContent = boardClone.querySelectorAll('.board-column-content');
@@ -120,33 +123,68 @@ export let dom = {
         dragula(boardContentArray);
         boardContainer.appendChild(boardClone);
     }
-
     ,
     openNewCardForm: function () {
-        this.disabled = true;
+        dom.changeAddButtonToDisable(this);
+        this.closest('.board-header').querySelector('.board-title').removeEventListener('click', dom.openRenameBoardForm);
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
-        this.parentNode.appendChild(inputClone);
+        inputClone.querySelector(".input-data").placeholder = "Enter card name...";
+        this.closest('.board-header').insertBefore(inputClone, this.closest('.board-header').querySelector(".board-toggle"));
 
         let saveBtn = this.parentNode.querySelector('.save-btn');
         saveBtn.addEventListener('click', function () {
             if (this.parentNode.querySelector('.input-data').value !== "") {
+                this.closest('.board-header').querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
                 let cardTitle = this.parentNode.querySelector('.input-data').value;
                 let boardId = this.closest('section.board').dataset.boardId;
                 dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
                     dom.showNewCard(data);
                 });
             }
-            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
             this.parentNode.querySelector('.input-data').remove();
             this.parentNode.remove();
         });
 
         let cancelBtn = this.parentNode.querySelector('.cancel-btn');
         cancelBtn.addEventListener('click', function () {
-            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
+            this.closest('.board-header').querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
             this.parentNode.remove();
         });
+    },
+
+    changeAddButtonToActive: function(addButton) {
+        addButton.disabled = false;
+        addButton.style.color = 'white';
+    },
+
+    changeAddButtonToDisable: function(addButton) {
+        addButton.disabled = true;
+        addButton.style.color = 'gray';
+    },
+
+    createCardDeletion: function (card) {
+        card.querySelector('.fas').addEventListener('click', dom.startCardDeletion);
+    },
+
+    startCardDeletion: function () {
+        const cardId = this.closest(".card").dataset.cardId;
+        dataHandler.deleteCard(cardId, function (data) {
+            dom.deleteCard(data)
+        })
+    },
+
+    deleteCard: function (data) {
+        const card = document.querySelector(`[data-card-id='${data.id}']`);
+        let cardContainer = card.parentElement;
+        card.remove();
+        if (cardContainer.childElementCount === 0) {
+            cardContainer.textContent = '';
+        }
     }
 
     ,
@@ -190,6 +228,65 @@ export let dom = {
             }
         )
     }
-    // here comes more features
-};
+    ,
+    openRenameBoardForm: function () {
+        const renameForm = document.querySelector("#add-data-template");
+        let renameFormClone = document.importNode(renameForm.content, true);
+        let firstChild = this.closest('.board-header');
+        let oldTitle = firstChild.childNodes[0];
 
+        renameFormClone.querySelector(".input-data").placeholder = "Enter new board name...";
+
+        const otherAddButton = this.closest('.board-header').querySelector('.add-card');
+        dom.changeAddButtonToDisable(otherAddButton);
+
+        const saveBtn = renameFormClone.querySelector(".save-btn");
+        saveBtn.addEventListener('click', function () {
+            dom.saveNewTitle(oldTitle, this);
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
+        });
+
+        const cancelBtn = renameFormClone.querySelector(".cancel-btn");
+        cancelBtn.addEventListener('click', function () {
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
+            dom.closeNewTitleForm(oldTitle, this);
+        });
+
+        firstChild.replaceChild(renameFormClone, oldTitle);
+    }
+    ,
+    saveNewTitle: function (oldTitle, saveButton) {
+        let title = saveButton.previousElementSibling.value;
+        let boardId = saveButton.closest('.board').dataset.boardId;
+        if (title !== "") {
+        } else {
+            title = oldTitle.innerHTML;
+        }
+        dataHandler.renameBoard(boardId, title, dom.showNewTitle);
+    }
+    ,
+    showNewTitle: function (newTitle) {
+        let currentBoard = document.querySelector(`[data-board-id='${newTitle.id}']`);
+        let boardHeader = currentBoard.querySelector('.board-header');
+        let titleSpan = document.createElement('span');
+        titleSpan.setAttribute('class', 'board-title');
+        titleSpan.innerHTML = newTitle.title;
+
+        currentBoard.querySelector('.add-input').remove();
+        boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
+
+        titleSpan.addEventListener('click', dom.openRenameBoardForm);
+    }
+    ,
+    closeNewTitleForm: function (oldTitle, cancelButton) {
+        let boardHeader = cancelButton.closest('.board-header');
+        cancelButton.closest('.add-input').remove();
+        let titleSpan = document.createElement('span');
+        titleSpan.setAttribute('class', 'board-title');
+        titleSpan.innerHTML = oldTitle.innerHTML;
+        boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
+        titleSpan.addEventListener('click', dom.openRenameBoardForm);
+    }
+};
