@@ -49,38 +49,35 @@ export let dom = {
     showCards: function (cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
-        const currentBoard = document.querySelector(`[data-board-id='${cards[0].board_id}']`);
         for (let card of cards) {
-            let currentColumn = currentBoard.querySelector(`[data-status-title='${card.status_id}']`).querySelector(".board-column-content");
-            const cardTemplate = document.querySelector('#card-template');
-            const cardClone = document.importNode(cardTemplate.content, true);
-            cardClone.querySelector('.card').dataset.cardStatusTitle = `${card.status_id}`;
-            cardClone.querySelector('.card').dataset.cardId = `${card.id}`;
-            cardClone.querySelector('.card-title').textContent = `${card.title}`;
-            dom.createCardDeletion(cardClone);
-            currentColumn.appendChild(cardClone);
+            dom.showCard(card, card.status_id)
         }
-    }
-    ,
+    },
+
     addCardData: function () {
         let addCardBtns = document.querySelectorAll('.add-card');
         for (let button of addCardBtns) {
             button.addEventListener('click', dom.openNewCardForm);
         }
-    }
-    ,
-    showNewCard: function (data) {
-        const currentBoard = document.querySelector(`[data-board-id='${data.board_id}']`);
-        let currentColumn = currentBoard.querySelector(`[data-status-title='new']`).querySelector(".board-column-content");
+    },
+
+    showNewCard: function (cardData) {
+        dom.showCard(cardData);
+    },
+
+    showCard: function (cardData, statusTitle = 'new') {
+        const currentBoard = document.querySelector(`[data-board-id='${cardData.board_id}']`);
+        let currentColumn = currentBoard.querySelector(`[data-status-title="${statusTitle}"]`)
+            .querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
         cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
-        cardClone.querySelector('.card').dataset.cardId = `${data.id}`;
-        cardClone.querySelector('.card-title').textContent = data.title;
+        cardClone.querySelector('.card').dataset.cardId = `${cardData.id}`;
+        cardClone.querySelector('.card-title').textContent = cardData.title;
         dom.createCardDeletion(cardClone);
         currentColumn.appendChild(cardClone);
-    }
-    ,
+    },
+
     openNewBoardForm: function () {
         document.querySelector('.board-add').disabled = true;
         const boardForm = document.querySelector("#add-data-template");
