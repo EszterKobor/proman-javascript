@@ -57,6 +57,7 @@ export let dom = {
         for (let card of cards) {
             dom.showCard(card, card.status_id)
         }
+        dom.renameCard();
     },
 
     addCardData: function () {
@@ -68,6 +69,7 @@ export let dom = {
 
     showNewCard: function (cardData) {
         dom.showCard(cardData);
+        dom.renameCard();
     },
 
     showCard: function (cardData, statusTitle = 'new') {
@@ -290,5 +292,35 @@ export let dom = {
         titleSpan.innerHTML = oldTitle.innerHTML;
         boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
         titleSpan.addEventListener('click', dom.openRenameBoardForm);
+    }
+    ,
+    renameCard: function () {
+        let cardTitles = document.querySelectorAll('.card-title');
+
+        for (let title of cardTitles) {
+            let originalTitle = title.innerHTML;
+            title.addEventListener('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    let newTitle = this.innerHTML;
+                    console.log(newTitle);
+                    this.setAttribute('contenteditable', 'false');
+                    let cardId = this.parentNode.dataset.cardId;
+                    console.log(cardId);
+                    title.innerHTML = newTitle;
+                    dataHandler.renameCard(cardId, newTitle, function () {
+                        originalTitle = newTitle;
+                    })
+                } else if (e.keyCode === 27) {
+                    this.innerHTML = originalTitle;
+                    this.setAttribute('contenteditable', 'false');
+                }
+                this.setAttribute('contenteditable', 'true');
+            });
+            title.addEventListener('blur', function () {
+                title.innerHTML = originalTitle;
+            });
+
+        }
     }
 };
