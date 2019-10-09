@@ -118,6 +118,7 @@ export let dom = {
     ,
     openNewCardForm: function () {
         this.disabled = true;
+        this.style.color = 'gray';
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
         inputClone.querySelector(".input-data").placeholder = "Enter card name...";
@@ -132,18 +133,25 @@ export let dom = {
                     dom.showNewCard(data);
                 });
             }
-            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToDisabled(addButton);
             this.parentNode.querySelector('.input-data').remove();
             this.parentNode.remove();
         });
 
         let cancelBtn = this.parentNode.querySelector('.cancel-btn');
         cancelBtn.addEventListener('click', function () {
-            this.parentNode.parentNode.querySelector('.add-card').disabled = false;
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToDisabled(addButton);
             this.parentNode.remove();
         });
-    }
-    ,
+    },
+
+    changeAddButtonToDisabled: function(addButton) {
+        addButton.disabled = false;
+        addButton.style.color = 'white';
+    },
+
     createCardDeletion: function (card) {
         card.querySelector('.fas').addEventListener('click', dom.startCardDeletion);
     },
@@ -237,4 +245,3 @@ export let dom = {
         titleSpan.addEventListener('click', dom.openRenameBoardForm);
     }
 };
-
