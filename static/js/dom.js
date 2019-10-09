@@ -70,15 +70,15 @@ export let dom = {
         dom.showCard(cardData);
     },
 
-    showCard: function (cardData, statusTitle = 'new') {
+    showCard: function (cardData, statusTitle = '0') {
         const currentBoard = document.querySelector(`[data-board-id='${cardData.board_id}']`);
         let currentColumn = currentBoard.querySelector(`[data-status-title="${statusTitle}"]`)
             .querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
-        cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
-        cardClone.querySelector('.card').dataset.cardId = `${cardData.id}`;
-        cardClone.querySelector('.card-title').textContent = cardData.title;
+        cardClone.querySelector('.card').dataset.cardStatusTitle = `0`;
+        cardClone.querySelector('.card').dataset.cardId = `${cardData.card_id}`;
+        cardClone.querySelector('.card-title').textContent = cardData.card_title;
         dom.createCardDeletion(cardClone);
         currentColumn.appendChild(cardClone);
     }
@@ -208,7 +208,7 @@ export let dom = {
 
     ,
     handleDrop: function (el, target) {
-        dataHandler.modifyCardStatus(el.dataset.cardId, target.previousElementSibling.innerHTML, function (data) {
+        dataHandler.modifyCardStatus(el.dataset.cardId, target.closest(".board-column").dataset.statusTitle, function (data) {
                 let statusName = "";
                 switch (data.status_id) {
                     case 0:

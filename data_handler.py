@@ -2,18 +2,6 @@ import database_common
 
 
 @database_common.connection_handler
-def get_card_status(cursor, status_id):
-    cursor.execute("""
-                    SELECT title 
-                    FROM statuses
-                    WHERE id = %(status_id)s;
-                    """,
-                   {'status_id': status_id})
-    card_status = cursor.fetchone()
-    return card_status['title']
-
-
-@database_common.connection_handler
 def get_boards(cursor):
     cursor.execute("""
                     SELECT * FROM boards
@@ -26,16 +14,19 @@ def get_boards(cursor):
 @database_common.connection_handler
 def get_cards_for_board(cursor, board_id):
     cursor.execute("""
-                    SELECT * FROM cards
+                    SELECT 
+                        cards.id AS card_id,
+                        board_id, 
+                        cards.title AS card_title,
+                        statuses.id AS status_id,
+                        statuses.title AS status_title 
+                    FROM cards 
+                    JOIN statuses on cards.status_id = statuses.id
                     WHERE board_id = %(board_id)s;
                     """,
                    {'board_id': board_id})
     all_cards = cursor.fetchall()
-    matching_cards = []
-    for card in all_cards:
-        card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
-        matching_cards.append(card)
-    return matching_cards
+    return all_cards
 
 
 @database_common.connection_handler
@@ -55,7 +46,7 @@ def create_new_card(cursor, title, board_id, status_id):
     cursor.execute("""
                     INSERT INTO cards (board_id, title, status_id)
                     VALUES (%(board_id)s, %(title)s, %(status_id)s)
-                    RETURNING id, board_id, title, status_id;
+                    RETURNING id AS card_id, board_id, title AS card_title, status_id;
                     """,
                    {'board_id': board_id, 'title': title, 'status_id': status_id})
     result = cursor.fetchone()
@@ -65,11 +56,7 @@ def create_new_card(cursor, title, board_id, status_id):
 @database_common.connection_handler
 def drag_and_drop_card(cursor, card_id, new_status_id):
     cursor.execute("""
-                    UPDATE cards SET status_id =  CASE WHEN %(new_status_id)s = 'New' THEN 0
-                    WHEN %(new_status_id)s = 'In Progress' THEN 1
-                    WHEN %(new_status_id)s = 'Testing' THEN 2
-                    WHEN %(new_status_id)s = 'Done' THEN 3
-                    END
+                    UPDATE cards SET status_id =  %(new_status_id)s
                     WHERE id = %(card_id)s
                     RETURNING id, status_id;""",
                    {'card_id': card_id, 'new_status_id': new_status_id})

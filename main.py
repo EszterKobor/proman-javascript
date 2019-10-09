@@ -40,6 +40,7 @@ def create_new_card():
     data = json.loads(request.data)
     return data_handler.create_new_card(data['cardTitle'], data['boardId'], data['statusId'])
 
+
 @app.route("/card-status-change/", methods=["POST"])
 @json_response
 def drag_and_drop():
