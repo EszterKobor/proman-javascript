@@ -138,3 +138,8 @@ button, .add-card, .board-add, .card {
     border-radius: 3px
 }
 
+.add-input {
+    display: inline-block;
+    margin: 13px;
+}
+

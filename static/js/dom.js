@@ -121,7 +121,7 @@ export let dom = {
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
         inputClone.querySelector(".input-data").placeholder = "Enter card name...";
-        this.parentNode.appendChild(inputClone);
+        this.closest('.board-header').insertBefore(inputClone, this.closest('.board-header').querySelector(".board-toggle"));
 
         let saveBtn = this.parentNode.querySelector('.save-btn');
         saveBtn.addEventListener('click', function () {
