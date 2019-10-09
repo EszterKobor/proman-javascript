@@ -26,10 +26,11 @@ export let dom = {
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
             boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
             boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
-            dragula(boardClone.querySelectorAll('.board-column-content'));
             let boardContent = boardClone.querySelectorAll('.board-column-content');
             let boardContentArray = Array.from(boardContent);
-            dragula(boardContentArray);
+            dragula(boardContentArray).on('drop', function (el, target) {
+                dom.handleDrop(el, target);
+            });
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
         }
@@ -55,7 +56,8 @@ export let dom = {
             const cardTemplate = document.querySelector('#card-template');
             const cardClone = document.importNode(cardTemplate.content, true);
             cardClone.querySelector('.card').dataset.cardStatusTitle = `${card.status_id}`;
-            cardClone.querySelector('.card-title').textContent = `${card.title}`;
+            cardClone.querySelector('.card-title').textContent = `${card.title}`
+            cardClone.querySelector('.card').dataset.cardId = `${card.id}`;
             currentColumn.appendChild(cardClone);
         }
     },
@@ -73,6 +75,8 @@ export let dom = {
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
         cardClone.querySelector('.card').dataset.cardStatusTitle = `new`;
+        cardClone.querySelector('.card').dataset.cardId = data.id;
+        cardClone.querySelector('.card').dataset.boardId = data.board_id;
         cardClone.querySelector('.card-title').textContent = data.title;
         currentColumn.appendChild(cardClone);
     }
@@ -160,6 +164,31 @@ export let dom = {
             this.querySelector('i').classList.add('fa-chevron-down');
         }
 
+    }
+
+    ,
+    handleDrop: function (el, target) {
+        dataHandler.modifyCardStatus(el.dataset.cardId, target.previousElementSibling.innerHTML, function (data) {
+                let statusName = "";
+                switch (data.status_id) {
+                    case 0:
+                        statusName = "New";
+                        break;
+                    case 1:
+                        statusName = "In Progress";
+                        break;
+                    case 2:
+                        statusName = "Testing";
+                        break;
+                    case 3:
+                        statusName = "Done";
+                        break;
+                    default:
+                        statusName = "Invalid status";
+                }
+                console.log(`Card:${data.id} status has been changed to ${statusName}`)
+            }
+        )
     }
     // here comes more features
 };

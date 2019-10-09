@@ -29,10 +29,11 @@ export let dataHandler = {
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         }).then(response => {
             if (response.status === 200) {
-            response.json()
-            .then(result => {
-                callback(result);
-            })} else {
+                response.json()
+                    .then(result => {
+                        callback(result);
+                    })
+            } else {
                 alert("Process is unsuccessful!")
             }
         })
@@ -86,6 +87,11 @@ export let dataHandler = {
         // creates new card, saves it and calls the callback function with its data
         this._api_post(`/create-new-card/`,
             {"cardTitle": cardTitle, "boardId": boardId, "statusId": statusId}, callback)
+    }
+    ,
+    modifyCardStatus: function (cardId, newStatusId, callback) {
+        this._api_post(`/card-status-change/`,
+            {"cardId": cardId, "newStatusId": newStatusId}, callback);
     }
     // here comes more features
 };
