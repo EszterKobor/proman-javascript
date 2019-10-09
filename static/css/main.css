@@ -138,7 +138,7 @@ button, .add-card, .board-add, .card {
     border-radius: 3px
 }
 
-.add-input {
+.board-header .add-input {
     display: inline-block;
     margin: 13px;
 }
