@@ -195,7 +195,6 @@ export let dom = {
         let renameFormClone = document.importNode(renameForm.content, true);
         let firstChild = this.closest('.board-header');
         let oldTitle = firstChild.childNodes[0];
-        console.log(oldTitle);
 
         renameFormClone.querySelector(".input-data").placeholder = "Enter new board name...";
 
