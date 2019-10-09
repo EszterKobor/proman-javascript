@@ -120,7 +120,9 @@ export let dom = {
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
         let boardContent = boardClone.querySelectorAll('.board-column-content');
         let boardContentArray = Array.from(boardContent);
-        dragula(boardContentArray);
+        dragula(boardContentArray).on('drop', function (el, target) {
+            dom.handleDrop(el, target);
+        });
         boardContainer.appendChild(boardClone);
     }
     ,
@@ -157,12 +159,12 @@ export let dom = {
         });
     },
 
-    changeAddButtonToActive: function(addButton) {
+    changeAddButtonToActive: function (addButton) {
         addButton.disabled = false;
         addButton.style.color = 'white';
     },
 
-    changeAddButtonToDisable: function(addButton) {
+    changeAddButtonToDisable: function (addButton) {
         addButton.disabled = true;
         addButton.style.color = 'gray';
     },
