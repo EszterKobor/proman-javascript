@@ -117,8 +117,8 @@ export let dom = {
     }
     ,
     openNewCardForm: function () {
-        this.disabled = true;
-        this.style.color = 'gray';
+        dom.changeAddButtonToDisable(this);
+        this.closest('.board-header').querySelector('.board-title').removeEventListener('click', dom.openRenameBoardForm);
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
         inputClone.querySelector(".input-data").placeholder = "Enter card name...";
@@ -127,6 +127,7 @@ export let dom = {
         let saveBtn = this.parentNode.querySelector('.save-btn');
         saveBtn.addEventListener('click', function () {
             if (this.parentNode.querySelector('.input-data').value !== "") {
+                this.closest('.board-header').querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
                 let cardTitle = this.parentNode.querySelector('.input-data').value;
                 let boardId = this.closest('section.board').dataset.boardId;
                 dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
@@ -134,22 +135,28 @@ export let dom = {
                 });
             }
             const addButton = this.closest('.board-header').querySelector('.add-card');
-            dom.changeAddButtonToDisabled(addButton);
+            dom.changeAddButtonToActive(addButton);
             this.parentNode.querySelector('.input-data').remove();
             this.parentNode.remove();
         });
 
         let cancelBtn = this.parentNode.querySelector('.cancel-btn');
         cancelBtn.addEventListener('click', function () {
+            this.closest('.board-header').querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
             const addButton = this.closest('.board-header').querySelector('.add-card');
-            dom.changeAddButtonToDisabled(addButton);
+            dom.changeAddButtonToActive(addButton);
             this.parentNode.remove();
         });
     },
 
-    changeAddButtonToDisabled: function(addButton) {
+    changeAddButtonToActive: function(addButton) {
         addButton.disabled = false;
         addButton.style.color = 'white';
+    },
+
+    changeAddButtonToDisable: function(addButton) {
+        addButton.disabled = true;
+        addButton.style.color = 'gray';
     },
 
     createCardDeletion: function (card) {
@@ -198,14 +205,21 @@ export let dom = {
 
         renameFormClone.querySelector(".input-data").placeholder = "Enter new board name...";
 
+        const otherAddButton = this.closest('.board-header').querySelector('.add-card');
+        dom.changeAddButtonToDisable(otherAddButton);
+
         const saveBtn = renameFormClone.querySelector(".save-btn");
         saveBtn.addEventListener('click', function () {
-            dom.saveNewTitle(oldTitle, this)
+            dom.saveNewTitle(oldTitle, this);
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
         });
 
         const cancelBtn = renameFormClone.querySelector(".cancel-btn");
         cancelBtn.addEventListener('click', function () {
-            dom.closeNewTitleForm(oldTitle, this)
+            const addButton = this.closest('.board-header').querySelector('.add-card');
+            dom.changeAddButtonToActive(addButton);
+            dom.closeNewTitleForm(oldTitle, this);
         });
 
         firstChild.replaceChild(renameFormClone, oldTitle);
