@@ -123,6 +123,7 @@ export let dom = {
         this.disabled = true;
         const inputTemplate = document.querySelector('#add-data-template');
         const inputClone = document.importNode(inputTemplate.content, true);
+        inputClone.querySelector(".input-data").placeholder = "Enter card name...";
         this.parentNode.appendChild(inputClone);
 
         let saveBtn = this.parentNode.querySelector('.save-btn');
@@ -190,6 +191,8 @@ export let dom = {
         let firstChild = this.closest('.board-header');
         let oldTitle = firstChild.childNodes[0];
         console.log(oldTitle);
+
+        renameFormClone.querySelector(".input-data").placeholder = "Enter new board name...";
 
         const saveBtn = renameFormClone.querySelector(".save-btn");
         saveBtn.addEventListener('click', function () {
