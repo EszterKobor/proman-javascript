@@ -37,8 +37,8 @@ export let dom = {
             boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
             let boardContent = boardClone.querySelectorAll('.board-column-content');
             let boardContentArray = Array.from(boardContent);
-            dragula(boardContentArray).on('drop', function (el, target) {
-                dom.handleDrop(el, target);
+            dragula(boardContentArray).on('drop', function (el, target, source) {
+                dom.handleDrop(el, target, source);
             });
             boardsContainer.appendChild(boardClone);
             this.loadCards(board.id);
@@ -213,7 +213,6 @@ export let dom = {
             cardContainer.textContent = '';
         }
     }
-
     ,
     toggleBoardContent: function () {
         let boardContent = this.closest('.board-header').nextElementSibling;
@@ -231,10 +230,13 @@ export let dom = {
 
     }
     ,
-    handleDrop: function (el, target) {
+    handleDrop: function (el, target, source) {
         dataHandler.modifyCardStatus(el.dataset.cardId, target.closest(".board-column").dataset.statusId, function (data) {
                 let statusName = dom.getColumnTitleByStatusId(data.status_id);
-                console.log(`Card:${data.id} status has been changed to ${statusName}`)
+                console.log(`Card:${data.id} status has been changed to ${statusName}`);
+                if (source.childElementCount === 0) {
+                    source.textContent = '';
+                }
             }
         )
     }
@@ -347,7 +349,7 @@ export let dom = {
         }
     },
 
-    renameColumn: function() {
+    renameColumn: function () {
         let columnTitles = document.querySelectorAll('.board-column-title');
 
         for (let title of columnTitles) {
