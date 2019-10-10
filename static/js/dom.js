@@ -316,9 +316,6 @@ export let dom = {
         return ColumnTitle;
     }
     ,
-    // setRenameColumnEventListener: function (columnTitles) {
-    //     for (let title in columnTitles) {
-    //         title.addEventListener('onfocusout', alert('jeeeeee'))
-    //     }
-    // }
+
+
 };
