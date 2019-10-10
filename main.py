@@ -65,6 +65,13 @@ def rename_board():
     return data_handler.rename_board(data['id'], data["newBoardTitle"])
 
 
+@app.route("/rename-card/", methods=["POST"])
+@json_response
+def rename_card():
+    data = json.loads(request.data)
+    return data_handler.rename_card(data['id'], data["newCardTitle"])
+
+
 def main():
     app.run(debug=True, port=5002)
 

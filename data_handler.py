@@ -114,3 +114,16 @@ def get_board(cursor, table_id):
                     """, {"table_id": table_id})
     board = cursor.fetchone()
     return board
+
+
+@database_common.connection_handler
+def rename_card(cursor, id, title):
+    cursor.execute("""
+                    UPDATE cards
+                    SET title = %(title)s
+                    WHERE cards.id = %(id)s
+                    RETURNING id, title;
+                    """,
+                   {'id': id, 'title': title})
+    result = cursor.fetchone()
+    return result

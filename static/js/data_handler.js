@@ -102,4 +102,8 @@ export let dataHandler = {
     renameBoard: function (boardId, newTitle, callback) {
         this._api_post('/rename-board/', {'id': boardId, 'newBoardTitle': newTitle}, callback);
     }
+    ,
+    renameCard: function (cardId, newTitle, callback) {
+        this._api_post('/rename-card/', {'id': cardId, 'newCardTitle': newTitle}, callback);
+    }
 };

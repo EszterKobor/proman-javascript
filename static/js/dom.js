@@ -68,6 +68,7 @@ export let dom = {
         for (let card of cards) {
             dom.showCard(card);
         }
+        dom.renameCard();
     },
 
     addCardData: function () {
@@ -79,6 +80,7 @@ export let dom = {
 
     showNewCard: function (cardData) {
         dom.showCard(cardData);
+        dom.renameCard();
     },
 
     showCard: function (cardData) {
@@ -316,6 +318,31 @@ export let dom = {
         return ColumnTitle;
     }
     ,
+    renameCard: function () {
+        let cardTitles = document.querySelectorAll('.card-title');
 
+        for (let title of cardTitles) {
+            let originalTitle = title.innerHTML;
+            title.addEventListener('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    let newTitle = this.innerHTML;
+                    this.setAttribute('contenteditable', 'false');
+                    let cardId = this.parentNode.dataset.cardId;
+                    this.innerHTML = newTitle;
+                    dataHandler.renameCard(cardId, newTitle, function () {
+                        originalTitle = newTitle;
+                    })
+                } else if (e.keyCode === 27) {
+                    this.innerHTML = originalTitle;
+                    this.setAttribute('contenteditable', 'false');
+                }
+                this.setAttribute('contenteditable', 'true');
+            });
+            title.addEventListener('blur', function () {
+                this.innerHTML = originalTitle;
+            });
 
+        }
+    }
 };
