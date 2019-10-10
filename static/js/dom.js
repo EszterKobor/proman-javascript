@@ -143,8 +143,8 @@ export let dom = {
 
         let boardContent = boardClone.querySelectorAll('.board-column-content');
         let boardContentArray = Array.from(boardContent);
-        dragula(boardContentArray).on('drop', function (el, target) {
-            dom.handleDrop(el, target);
+        dragula(boardContentArray).on('drop', function (el, target, source) {
+            dom.handleDrop(el, target, source);
         });
         boardContainer.appendChild(boardClone);
         dom.renameColumn();
