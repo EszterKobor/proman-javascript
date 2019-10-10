@@ -30,8 +30,11 @@ def get_cards_for_board(board_id: int):
 @app.route("/create-new-board/", methods=["POST"])
 @json_response
 def create_new_board():
-    data = json.loads(request.data)
-    return data_handler.create_new_board(data["boardTitle"])
+    new_board_data = json.loads(request.data)
+    new_board = data_handler.create_new_board(new_board_data["boardTitle"])
+    new_board_id = new_board['id']
+    data_handler.add_statuses_to_table(new_board_id)
+    return data_handler.get_board(new_board_id)
 
 
 @app.route("/create-new-card/", methods=["POST"])

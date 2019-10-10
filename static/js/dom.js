@@ -66,7 +66,7 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
         for (let card of cards) {
-            dom.showCard(card, card.status_id)
+            dom.showCard(card);
         }
     },
 
@@ -81,10 +81,9 @@ export let dom = {
         dom.showCard(cardData);
     },
 
-
-    showCard: function (cardData, statusId = '0') {
+    showCard: function (cardData) {
         const currentBoard = document.querySelector(`[data-board-id='${cardData.board_id}']`);
-        let currentColumnContent = currentBoard.querySelector(`[data-status-id="${statusId}"]`)
+        let currentColumnContent = currentBoard.querySelector(`[data-status-id="${cardData.status_id}"]`)
             .querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
@@ -132,11 +131,11 @@ export let dom = {
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
 
         let columnTemplate = document.querySelector('#column-template');
-        for (let i=0; i<4; i++) {
+        for (let statusId in boardData.statuses) {
             let columnClone = document.importNode(columnTemplate.content, true);
             let boardColumn = columnClone.querySelector('.board-column');
-            boardColumn.dataset.statusId = `${i}`;
-            columnClone.querySelector('.board-column-title').textContent = `${dom.getColumnTitleByStatusId(i)}`;
+            boardColumn.dataset.statusId = `${statusId}`;
+            columnClone.querySelector('.board-column-title').textContent = `${boardData.statuses[statusId]}`;
             boardClone.querySelector('.board-columns').appendChild(columnClone);
         }
 
@@ -162,7 +161,8 @@ export let dom = {
                 this.closest('.board-header').querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
                 let cardTitle = this.parentNode.querySelector('.input-data').value;
                 let boardId = this.closest('section.board').dataset.boardId;
-                dataHandler.createNewCard(cardTitle, boardId, 0, function (data) {
+                const status = this.closest('.board').querySelector('[data-status-id]').dataset.statusId;
+                dataHandler.createNewCard(cardTitle, boardId, status, function (data) {
                     dom.showNewCard(data);
                 });
             }
@@ -297,7 +297,7 @@ export let dom = {
         titleSpan.addEventListener('click', dom.openRenameBoardForm);
     }
     ,
-    getColumnTitleByStatusId: function(statusId) {
+    getColumnTitleByStatusId: function (statusId) {
         let ColumnTitle = "";
         switch (statusId) {
             case 0:

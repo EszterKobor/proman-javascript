@@ -6,7 +6,7 @@ def get_boards(cursor):
     cursor.execute("""
                     SELECT boards.*, json_object_agg(statuses.id, statuses.title) AS statuses
                     FROM boards
-                    CROSS JOIN statuses
+                    JOIN statuses on boards.id = statuses.board_id
                     GROUP BY boards.id
                     ORDER BY boards.id;
                     """)
@@ -19,13 +19,13 @@ def get_cards_for_board(cursor, board_id):
     cursor.execute("""
                     SELECT 
                         cards.id AS card_id,
-                        board_id, 
+                        cards.board_id, 
                         cards.title AS card_title,
                         statuses.id AS status_id,
                         statuses.title AS status_title 
                     FROM cards 
                     JOIN statuses on cards.status_id = statuses.id
-                    WHERE board_id = %(board_id)s;
+                    WHERE cards.board_id = %(board_id)s;
                     """,
                    {'board_id': board_id})
     all_cards = cursor.fetchall()
@@ -37,7 +37,7 @@ def create_new_board(cursor, title):
     cursor.execute("""
                     INSERT INTO boards (title)
                     VALUES (%(title)s)
-                    RETURNING id, title;
+                    RETURNING id;
                     """,
                    {'title': title})
     result = cursor.fetchone()
@@ -90,3 +90,27 @@ def rename_board(cursor, id, title):
                    {'id': id, 'title': title})
     result = cursor.fetchone()
     return result
+
+
+@database_common.connection_handler
+def add_statuses_to_table(cursor, table_id):
+    cursor.execute("""
+    INSERT INTO statuses (title, board_id) VALUES ('new', %(table_id)s);
+    INSERT INTO statuses (title, board_id) VALUES ('in progress', %(table_id)s);
+    INSERT INTO statuses (title, board_id) VALUES ('testing', %(table_id)s);
+    INSERT INTO statuses (title, board_id) VALUES ('done', %(table_id)s);
+    """, {'table_id': table_id})
+
+
+@database_common.connection_handler
+def get_board(cursor, table_id):
+    cursor.execute("""
+                    SELECT boards.*, json_object_agg(statuses.id, statuses.title) AS statuses
+                    FROM boards
+                    JOIN statuses on boards.id = statuses.board_id
+                    WHERE boards.id = %(table_id)s
+                    GROUP BY boards.id
+                    ORDER BY boards.id;
+                    """, {"table_id": table_id})
+    board = cursor.fetchone()
+    return board
