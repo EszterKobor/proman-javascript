@@ -4,8 +4,11 @@ import database_common
 @database_common.connection_handler
 def get_boards(cursor):
     cursor.execute("""
-                    SELECT * FROM boards
-                    ORDER BY id;
+                    SELECT boards.*, json_object_agg(statuses.id, statuses.title) AS statuses
+                    FROM boards
+                    CROSS JOIN statuses
+                    GROUP BY boards.id
+                    ORDER BY boards.id;
                     """)
     boards = cursor.fetchall()
     return boards

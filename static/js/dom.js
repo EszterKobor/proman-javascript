@@ -22,6 +22,16 @@ export let dom = {
         for (let board of boards) {
             const boardTemplate = document.querySelector('#board-template');
             const boardClone = document.importNode(boardTemplate.content, true);
+
+            let columnTemplate = document.querySelector('#column-template');
+            for (let statusId in board.statuses) {
+                let columnClone = document.importNode(columnTemplate.content, true);
+                let boardColumn = columnClone.querySelector('.board-column');
+                boardColumn.dataset.statusId = `${statusId}`;
+                columnClone.querySelector('.board-column-title').textContent = `${board.statuses[statusId]}`;
+                boardClone.querySelector('.board-columns').appendChild(columnClone);
+            }
+
             boardClone.querySelector('.board-title').textContent = `${board.title}`;
             boardClone.querySelector('.board').dataset.boardId = `${board.id}`;
             boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
@@ -35,6 +45,7 @@ export let dom = {
         }
         this.addCardData();
         document.querySelector('#board-loading').remove();
+        let columnTitles = document.querySelectorAll('board-column-title');
 
         let boardTitles = document.querySelectorAll('.board-title');
         for (let title of boardTitles) {
@@ -70,17 +81,18 @@ export let dom = {
         dom.showCard(cardData);
     },
 
-    showCard: function (cardData, statusTitle = '0') {
+
+    showCard: function (cardData, statusId = '0') {
         const currentBoard = document.querySelector(`[data-board-id='${cardData.board_id}']`);
-        let currentColumn = currentBoard.querySelector(`[data-status-title="${statusTitle}"]`)
+        let currentColumnContent = currentBoard.querySelector(`[data-status-id="${statusId}"]`)
             .querySelector(".board-column-content");
         const cardTemplate = document.querySelector('#card-template');
         const cardClone = document.importNode(cardTemplate.content, true);
-        cardClone.querySelector('.card').dataset.cardStatusTitle = `0`;
+        cardClone.querySelector('.card').dataset.cardStatusId = `0`;
         cardClone.querySelector('.card').dataset.cardId = `${cardData.card_id}`;
         cardClone.querySelector('.card-title').textContent = cardData.card_title;
         dom.createCardDeletion(cardClone);
-        currentColumn.appendChild(cardClone);
+        currentColumnContent.appendChild(cardClone);
     }
     ,
     openNewBoardForm: function () {
@@ -118,6 +130,16 @@ export let dom = {
         boardClone.querySelector('.board-title').addEventListener('click', dom.openRenameBoardForm);
         boardClone.querySelector('.add-card').addEventListener('click', dom.openNewCardForm);
         boardClone.querySelector('.board-toggle').addEventListener('click', dom.toggleBoardContent);
+
+        let columnTemplate = document.querySelector('#column-template');
+        for (let i=0; i<4; i++) {
+            let columnClone = document.importNode(columnTemplate.content, true);
+            let boardColumn = columnClone.querySelector('.board-column');
+            boardColumn.dataset.statusId = `${i}`;
+            columnClone.querySelector('.board-column-title').textContent = `${dom.getColumnTitleByStatusId(i)}`;
+            boardClone.querySelector('.board-columns').appendChild(columnClone);
+        }
+
         let boardContent = boardClone.querySelectorAll('.board-column-content');
         let boardContentArray = Array.from(boardContent);
         dragula(boardContentArray).on('drop', function (el, target) {
@@ -205,27 +227,10 @@ export let dom = {
         }
 
     }
-
     ,
     handleDrop: function (el, target) {
-        dataHandler.modifyCardStatus(el.dataset.cardId, target.closest(".board-column").dataset.statusTitle, function (data) {
-                let statusName = "";
-                switch (data.status_id) {
-                    case 0:
-                        statusName = "New";
-                        break;
-                    case 1:
-                        statusName = "In Progress";
-                        break;
-                    case 2:
-                        statusName = "Testing";
-                        break;
-                    case 3:
-                        statusName = "Done";
-                        break;
-                    default:
-                        statusName = "Invalid status";
-                }
+        dataHandler.modifyCardStatus(el.dataset.cardId, target.closest(".board-column").dataset.statusId, function (data) {
+                let statusName = dom.getColumnTitleByStatusId(data.status_id);
                 console.log(`Card:${data.id} status has been changed to ${statusName}`)
             }
         )
@@ -291,4 +296,29 @@ export let dom = {
         boardHeader.insertBefore(titleSpan, boardHeader.firstChild);
         titleSpan.addEventListener('click', dom.openRenameBoardForm);
     }
+    ,
+    getColumnTitleByStatusId: function(statusId) {
+        let ColumnTitle = "";
+        switch (statusId) {
+            case 0:
+                ColumnTitle = "New";
+                break;
+            case 1:
+                ColumnTitle = "In Progress";
+                break;
+            case 2:
+                ColumnTitle = "Testing";
+                break;
+            case 3:
+                ColumnTitle = "Done";
+                break;
+        }
+        return ColumnTitle;
+    }
+    ,
+    // setRenameColumnEventListener: function (columnTitles) {
+    //     for (let title in columnTitles) {
+    //         title.addEventListener('onfocusout', alert('jeeeeee'))
+    //     }
+    // }
 };
