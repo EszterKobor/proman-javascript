@@ -45,12 +45,12 @@ export let dom = {
         }
         this.addCardData();
         document.querySelector('#board-loading').remove();
-        let columnTitles = document.querySelectorAll('board-column-title');
 
         let boardTitles = document.querySelectorAll('.board-title');
         for (let title of boardTitles) {
             title.addEventListener('click', dom.openRenameBoardForm);
         }
+        dom.renameColumn();
     }
     ,
     loadCards: function (boardId) {
@@ -147,6 +147,7 @@ export let dom = {
             dom.handleDrop(el, target);
         });
         boardContainer.appendChild(boardClone);
+        dom.renameColumn();
     }
     ,
     openNewCardForm: function () {
@@ -344,5 +345,35 @@ export let dom = {
             });
 
         }
+    },
+
+    renameColumn: function() {
+        let columnTitles = document.querySelectorAll('.board-column-title');
+
+        for (let title of columnTitles) {
+            let originalTitle = title.innerHTML;
+            title.addEventListener('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    let newTitle = this.innerHTML;
+                    this.setAttribute('contenteditable', 'false');
+                    let statusId = this.closest('[data-status-id]').dataset.statusId;
+                    this.innerHTML = newTitle;
+                    dataHandler.renameColumn(statusId, newTitle, function () {
+                        originalTitle = newTitle;
+                    })
+                } else if (e.keyCode === 27) {
+                    this.innerHTML = originalTitle;
+                    this.setAttribute('contenteditable', 'false');
+                }
+                this.setAttribute('contenteditable', 'true');
+            });
+            title.addEventListener('blur', function () {
+                this.innerHTML = originalTitle;
+            });
+
+        }
     }
+
+
 };

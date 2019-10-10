@@ -127,3 +127,16 @@ def rename_card(cursor, id, title):
                    {'id': id, 'title': title})
     result = cursor.fetchone()
     return result
+
+
+@database_common.connection_handler
+def rename_column(cursor, id, title):
+    cursor.execute("""
+                    UPDATE statuses
+                    SET title = %(title)s
+                    WHERE statuses.id = %(id)s
+                    RETURNING id, title;
+                    """,
+                   {'id': id, 'title': title})
+    result = cursor.fetchone()
+    return result

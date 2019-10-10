@@ -70,17 +70,17 @@ INSERT INTO statuses VALUES (7, 'done', 2);
 SELECT pg_catalog.setval('statuses_id_seq', 7, true);
 
 
-INSERT INTO cards VALUES (1, 1, 'my new 1', 0, 0);
+INSERT INTO cards VALUES (1, 1, 'new progress', 0, 0);
 INSERT INTO cards VALUES (2, 1, 'my new 2', 0, 1);
 INSERT INTO cards VALUES (3, 1, 'my in progress card', 1, 0);
-INSERT INTO cards VALUES (4, 1, 'planninggg', 2, 0);
-INSERT INTO cards VALUES (5, 1, 'done card xy 1', 3, 0);
-INSERT INTO cards VALUES (6, 1, 'done card z 1', 3, 1);
+INSERT INTO cards VALUES (4, 1, 'testing webpage', 2, 0);
+INSERT INTO cards VALUES (5, 1, 'done something 1', 3, 0);
+INSERT INTO cards VALUES (6, 1, 'done my stuff 1', 3, 1);
 INSERT INTO cards VALUES (7, 2, 'new card 1', 4, 0);
 INSERT INTO cards VALUES (8, 2, 'new card 2', 4, 1);
 INSERT INTO cards VALUES (9, 2, 'in progress card', 5, 0);
-INSERT INTO cards VALUES (10, 2, 'planning', 6, 0);
-INSERT INTO cards VALUES (11, 2, 'done card 1', 7, 0);
+INSERT INTO cards VALUES (10, 2, 'testing something', 6, 0);
+INSERT INTO cards VALUES (11, 2, 'done little card 1', 7, 0);
 INSERT INTO cards VALUES (12, 2, 'done card 1', 7, 1);
 SELECT pg_catalog.setval('cards_id_seq', 12, true);
 

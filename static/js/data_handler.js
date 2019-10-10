@@ -90,7 +90,7 @@ export let dataHandler = {
     },
 
     deleteCard: function (cardId, callback) {
-      this._api_post(`/delete_card/`, {"cardId": cardId}, callback)
+        this._api_post(`/delete_card/`, {"cardId": cardId}, callback)
     }
     ,
     modifyCardStatus: function (cardId, newStatusId, callback) {
@@ -105,5 +105,9 @@ export let dataHandler = {
     ,
     renameCard: function (cardId, newTitle, callback) {
         this._api_post('/rename-card/', {'id': cardId, 'newCardTitle': newTitle}, callback);
+    }
+    ,
+    renameColumn: function (statusId, newTitle, callback) {
+        this._api_post('/rename-column/', {'id': statusId, 'newTitle': newTitle}, callback);
     }
 };

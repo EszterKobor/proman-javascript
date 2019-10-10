@@ -71,6 +71,12 @@ def rename_card():
     data = json.loads(request.data)
     return data_handler.rename_card(data['id'], data["newCardTitle"])
 
+@app.route("/rename-column/", methods=["POST"])
+@json_response
+def rename_column():
+    data = json.loads(request.data)
+    return data_handler.rename_column(data['id'], data["newTitle"])
+
 
 def main():
     app.run(debug=True, port=5002)
