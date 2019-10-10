@@ -228,7 +228,6 @@ export let dom = {
                     default:
                         statusName = "Invalid status";
                 }
-                console.log(`Card:${data.id} status has been changed to ${statusName}`)
             }
         )
     }
@@ -303,11 +302,9 @@ export let dom = {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                     let newTitle = this.innerHTML;
-                    console.log(newTitle);
                     this.setAttribute('contenteditable', 'false');
                     let cardId = this.parentNode.dataset.cardId;
-                    console.log(cardId);
-                    title.innerHTML = newTitle;
+                    this.innerHTML = newTitle;
                     dataHandler.renameCard(cardId, newTitle, function () {
                         originalTitle = newTitle;
                     })
@@ -318,7 +315,7 @@ export let dom = {
                 this.setAttribute('contenteditable', 'true');
             });
             title.addEventListener('blur', function () {
-                title.innerHTML = originalTitle;
+                this.innerHTML = originalTitle;
             });
 
         }
