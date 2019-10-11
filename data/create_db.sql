@@ -43,15 +43,15 @@ ALTER TABLE ONLY cards
 
 ALTER TABLE ONLY statuses
     ADD CONSTRAINT pk_statuses_id PRIMARY KEY (id),
-    ADD CONSTRAINT fk_board_id FOREIGN KEY (board_id) REFERENCES boards(id);
+    ADD CONSTRAINT fk_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
 
 
 ALTER TABLE ONLY cards
-    ADD CONSTRAINT fk_board_id FOREIGN KEY (board_id) REFERENCES boards(id);
+    ADD CONSTRAINT fk_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE ;
 
 
 ALTER TABLE ONLY cards
-    ADD CONSTRAINT fk_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
+    ADD CONSTRAINT fk_status_id FOREIGN KEY (status_id) REFERENCES statuses(id) ON DELETE CASCADE;
 
 
 INSERT INTO boards VALUES (1, 'Board 1');
